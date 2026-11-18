@@ -1,0 +1,47 @@
+name: Import MCN Bake Bible static deploy
+on:
+  push:
+    branches: [bible-import]
+    paths:
+      - .github/workflows/import-bible.yml
+permissions:
+  contents: write
+jobs:
+  import-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bible-import
+          persist-credentials: true
+      - name: Download and verify exact archived Netlify deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://6a5d293398d354814c096f18--symphonious-biscotti-8e1ea2.netlify.app"
+          mkdir -p /tmp/bible/assets
+          for path in index.html server.cjs server.cjs.map assets/purify.es-CLGrRn1w.js assets/index.es-DBl2u_b9.js assets/index-BTzTrgBb.css assets/html2canvas.esm-QH1iLAAe.js assets/index-C-_e2gpA.js; do
+            curl --fail --location --retry 3 --silent --show-error "$BASE/$path" --output "/tmp/bible/$path"
+          done
+          cat >/tmp/bible/checksums.txt <<'EOF'
+          9abe94fa353850b6ddd9c5c41d971c30ac1219efb462007171ccc650aae8cfa0  index.html
+          deffb6ade38a794a5d74302bfebc8f0b531687d3b00432c49a2b846e5c5ae679  server.cjs
+          13ce0f3d4d64f8f4459962ecd1086ec326c49c2a897c76638ca9aef24b204dd2  server.cjs.map
+          f2752a91f1361ad4a2e6713ab4e00be2b677ac91e1a9e428b0a91be77af39d46  assets/purify.es-CLGrRn1w.js
+          f0aefe76c1218f4c8840281f9f4b3619d331b55e72cbe2e7414b16015ffea11a  assets/index.es-DBl2u_b9.js
+          3fedfd5b349d182f96a6fcae387f289aa96c92a50b49914a60f272c769a9baa7  assets/index-BTzTrgBb.css
+          061c08e50c0dc57b8d5e6531f0b8237a52a68b233260d49ab2f2c2906ad112c4  assets/html2canvas.esm-QH1iLAAe.js
+          a35bb0e82e5f0f1158d696889f5550dafb5cccbe5a0fc68bf737b5a7b75fcfca  assets/index-C-_e2gpA.js
+          EOF
+          cd /tmp/bible
+          sha256sum --check checksums.txt
+          cd "$GITHUB_WORKSPACE"
+          rm -rf assets
+          cp /tmp/bible/index.html /tmp/bible/server.cjs /tmp/bible/server.cjs.map .
+          cp -R /tmp/bible/assets .
+          printf '/* /index.html 200\n' > _redirects
+          git add index.html server.cjs server.cjs.map assets _redirects
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Import verified MCN Bake Bible deployment" 
+          git push origin HEAD:bible-import
