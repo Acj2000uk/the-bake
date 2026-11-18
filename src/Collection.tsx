@@ -34,8 +34,14 @@ export function Engraving() {
     </svg>
   );
 }
-const images = import.meta.glob<string>("./plates/*.webp", { eager:true, import:"default", query:"?url" });
-export function platePhoto(page:number){return images["./plates/"+page+".webp"]}
+const images = import.meta.glob<string>("./plates/*.webp", {
+  eager: true,
+  import: "default",
+  query: "?url",
+});
+export function platePhoto(page: number) {
+  return images["./plates/" + page + ".webp"];
+}
 export function Collection({
   recipes,
   favs,
@@ -128,17 +134,13 @@ export function Collection({
         </label>
         <div className="plates">
           {matches.map((r) => {
-            const photo = images["./plates/"+r.page+".webp"];
+            const photo = r.photo || images["./plates/" + r.page + ".webp"];
             return (
               <article className="plate" key={r.id}>
                 <button className="plateLink" onClick={() => open(r)}>
                   <span className="plateImage">
                     {photo ? (
-                      <img
-                        loading="lazy"
-                        src={photo}
-                        alt=""
-                      />
+                      <img loading="lazy" src={photo} alt="" />
                     ) : (
                       <span className="typePlate">
                         <small>MCN Bake</small>

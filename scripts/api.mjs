@@ -99,7 +99,18 @@ export function api(directory = ".local", credentials = {}) {
         if (!post && path === "catalog")
           value = {
             role: session.role,
-            recipes: recipes.map((r) => approved(r.id) || r),
+            recipes: recipes
+              .filter((r) => !read("removed/" + r.id, false))
+              .map((r) => ({
+                ...(approved(r.id) || r),
+                photo: read("photo/" + r.id, null),
+              })),
+            deleted:
+              session.role === "admin"
+                ? recipes
+                    .filter((r) => read("removed/" + r.id, false))
+                    .map(({ id, title }) => ({ id, title }))
+                : [],
             booklet,
           };
         else if (post && path === "logout") {
@@ -107,10 +118,27 @@ export function api(directory = ".local", credentials = {}) {
           value = { ok: true };
         } else if (!post && path === "source")
           value = originalPage(byId(url.searchParams.get("id")).page);
-        else if (path === "draft") {
+        else if (post && path === "manage") {
+          if (session.role !== "admin") fail(403, "Admin access required");
+          const r = byId(body.id);
+          if (body.action === "delete" || body.action === "restore")
+            save("removed/" + r.id, body.action === "delete");
+          else if (
+            body.action === "photo" &&
+            !read("removed/" + r.id, false) &&
+            typeof body.photo === "string" &&
+            /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(body.photo) &&
+            body.photo.length <= 230000
+          )
+            save("photo/" + r.id, body.photo);
+          else fail(400, "Invalid recipe action");
+          value = { ok: true };
+        } else if (path === "draft") {
           if (session.role !== "admin") fail(403, "Admin access required");
           const r = byId(post ? body.id : url.searchParams.get("id")),
             key = "draft/" + r.id;
+          if (read("removed/" + r.id, false))
+            fail(409, "Restore this recipe before editing");
           const draft = read(key, { recipe: approved(r.id) || r, version: 0 });
           if (!post) value = draft;
           else {
@@ -200,7 +228,7 @@ export function api(directory = ".local", credentials = {}) {
             if (sheet.version !== body.version)
               fail(409, "Sheet changed. Reload the sheet.");
             if (body.action === "add") {
-              const r = approved(body.id);
+              const r = !read("removed/" + body.id, false) && approved(body.id);
               if (!r || !Number.isFinite(body.target) || body.target <= 0)
                 fail(400, "Approved recipe and positive yield required");
               sheet.lines.push({
@@ -220,7 +248,7 @@ export function api(directory = ".local", credentials = {}) {
           }
           value = sheet;
         } else if (post && path === "ask") {
-          const r = approved(body.id);
+          const r = !read("removed/" + body.id, false) && approved(body.id);
           if (!r) fail(400, "Select an approved recipe");
           const passages = [
             ...r.ingredients.map((i) => i.name + " • " + i.amount),

@@ -1,5 +1,6 @@
 export type Ingredient = { name: string; amount: string };
 export type Recipe = {
+  photo?: string;
   id: string;
   title: string;
   category: string;
@@ -14,7 +15,12 @@ export type Recipe = {
   note: string;
   allergen: string;
 };
-export type Catalog = { recipes: Recipe[]; role: string; booklet: string[] };
+export type Catalog = {
+  deleted?: { id: string; title: string }[];
+  recipes: Recipe[];
+  role: string;
+  booklet: string[];
+};
 export type Sheet = {
   version: number;
   lines: { id: string; recipe: Recipe; target: number; signoff: string }[];

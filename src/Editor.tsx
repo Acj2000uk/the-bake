@@ -4,8 +4,10 @@ import type { Recipe } from "./types";
 export function Editor({
   r,
   onSaved,
+  focusField,
 }: {
   r: Recipe;
+  focusField?: string;
   onSaved: () => Promise<void>;
 }) {
   const [draft, set] = useState<{ recipe: Recipe; version: number } | null>(
@@ -19,6 +21,11 @@ export function Editor({
       .then(set)
       .catch((e) => say(e.message));
   }, [r.id]);
+  const loaded = Boolean(draft);
+  useEffect(() => {
+    if (loaded && focusField)
+      document.getElementById("edit-" + focusField)?.focus();
+  }, [loaded, focusField]);
   if (!draft) return <p>{msg || "Loading draft…"}</p>;
   const rec = draft.recipe;
   function edit(k: keyof Recipe, v: unknown) {
@@ -64,11 +71,13 @@ export function Editor({
           }
           {["note", "method", "allergen"].includes(k) ? (
             <textarea
+              id={"edit-" + k}
               value={rec[k]}
               onChange={(e) => edit(k, e.target.value)}
             />
           ) : (
             <input
+              id={"edit-" + k}
               value={rec[k]}
               type={k === "baseYield" ? "number" : "text"}
               onChange={(e) =>

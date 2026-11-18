@@ -7,7 +7,9 @@ import { Ingredients } from "./Ingredients";
 import { Production } from "./Production";
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-500.css";
-import {AllergenPanel} from "./AllergenPanel";
+import { Admin, PhotoTools, RecipeOrigin } from "./Admin";
+import { Maximize2, Minimize2, Pencil, Trash2, X } from "lucide-react";
+import { AllergenPanel } from "./AllergenPanel";
 import { Collection, Engraving, platePhoto } from "./Collection";
 import {
   LogOut,
@@ -38,6 +40,8 @@ function App() {
     }),
     [target, yieldTo] = useState("1"),
     [source, showSource] = useState(""),
+    [focusView, focus] = useState(true),
+    [editField, field] = useState("title"),
     [editing, edit] = useState(false),
     [question, ask] = useState(""),
     [answer, reply] = useState(""),
@@ -50,8 +54,15 @@ function App() {
     refresh().catch(() => {});
   }, []);
   const r = data?.recipes.find((r) => r.id === id);
+  const curator = data?.role === "admin" || data?.role === "preview-admin";
+  function launchEditor(key: string) {
+    field(key);
+    edit(true);
+  }
   function open(r: Recipe) {
     select(r.id);
+    nav("Recipes");
+    focus(true);
     yieldTo(String(r.baseYield));
     edit(false);
     showSource("");
@@ -75,9 +86,17 @@ function App() {
         </div>
         {data && (
           <nav aria-label="Kitchen navigation">
-            {(data.role === "review"
-              ? ["Recipes", "Allergens"]
-              : ["Recipes", "Production", "Allergens", "Assistant"]
+            {(data.role === "preview-admin"
+              ? ["Recipes", "Allergens", "Admin"]
+              : data.role === "review"
+                ? ["Recipes", "Allergens"]
+                : [
+                    "Recipes",
+                    "Production",
+                    "Allergens",
+                    "Assistant",
+                    ...(data.role === "admin" ? ["Admin"] : []),
+                  ]
             ).map((t) => {
               const Icon =
                 {
@@ -164,7 +183,7 @@ function App() {
         </main>
       ) : (
         <>
-          <main className={tab==="Recipes" && r?"recipePage":undefined}>
+          <main className={tab === "Recipes" && r ? "recipePage" : undefined}>
             <div hidden={tab !== "Recipes" || Boolean(r)}>
               <Collection
                 recipes={data.recipes}
@@ -173,96 +192,220 @@ function App() {
                 open={open}
               />
             </div>
+            {tab === "Admin" && curator && (
+              <Admin data={data} open={open} refresh={refresh} />
+            )}
             {tab === "Recipes" && r && (
               <>
-                <div className="recipeSpread"><div className={"recipePortrait"+(platePhoto(r.page)?" withPhoto":"")}>
-                {platePhoto(r.page)&&<img src={platePhoto(r.page)} alt=""/>}<div><small>{r.category} · Archive page {r.page}</small><h1>{r.title}</h1></div></div>
-                <div className="recipeText"><button className="back" onClick={() => select("")}>
-                  <ArrowLeft />
-                  Recipe index
-                </button>
-                <p>
-                  <small>
-                    {r.category} · Archive page {r.page}
-                    {r.amendment ? " · Amendment page " + r.amendment : ""}
-                  </small>
-                </p>
-                <p>
-                  {r.revision
-                    ? "Approved revision " + r.revision
-                    : r.active
-                      ? "Review copy · awaiting recipe approval"
-                      : "Historical recipe · archived"}
-                </p>
-                <AllergenPanel key={r.id} recipe={r}/>
-                <div className="controls">
-                  <label>
-                    Target yield
-                    <span className="unitinput">
-                      <input
-                        aria-label={"Target " + r.unit}
-                        type="number"
-                        min="0"
-                        step="any"
-                        value={target}
-                        onChange={(e) => yieldTo(e.target.value)}
-                      />
-                      <span>{r.unit}</span>
-                    </span>
-                  </label>
-                  <button
-                    disabled={!(Number(target) > 0)}
-                    onClick={async () => {
-                      const { recipePdf } = await import("./pdf.js");
-                      recipePdf(r, Number(target)).save(
-                        r.title.replace(/[^a-z0-9 -]/gi, "").trim() + ".pdf",
-                      );
-                    }}
-                  >
-                    <Download />
-                    Download recipe PDF
-                  </button>
-                  {data.role === "admin" && (
-                    <button onClick={() => edit(!editing)}>
-                      {editing ? "Close editor" : "Edit recipe"}
-                    </button>
-                  )}
-                </div>
-                {editing && <Editor r={r} onSaved={refresh} />}
-                <h2>Ingredients</h2>
-                {Number(target) > 0 ? (
-                  <>
-                    <p>
-                      Target {target} {r.unit} · Base recipe {r.baseYield}{" "}
-                      {r.unit}
-                    </p>
-                    <Ingredients recipe={r} target={Number(target)} />
-                  </>
-                ) : (
-                  <p>Enter a positive target yield.</p>
-                )}
-                {r.note && (
-                  <>
-                    <h2>Production notes</h2>
-                    <p className="lines">{r.note}</p>
-                  </>
-                )}
-                <h2>Method</h2>
-                {Number(target) !== r.baseYield && (
-                  <p>
-                    Method quantities below refer to the base batch. Check
-                    additions against the scaled ingredient list.
-                  </p>
-                )}
-                <div className="lines">{r.method}</div>
-                <button
-                  onClick={async () =>
-                    showSource(source ? "" : await api("source?id=" + r.id))
-                  }
+                <div
+                  className={"recipeSpread" + (focusView ? "" : " readingMode")}
                 >
-                  {source ? "Hide" : "View"} archive original
-                </button>
-                {source && <pre>{source}</pre>}</div></div>
+                  <div
+                    className={
+                      "recipePortrait" +
+                      (r.photo || platePhoto(r.page) ? " withPhoto" : "")
+                    }
+                  >
+                    {curator && (
+                      <PhotoTools key={r.id} r={r} refresh={refresh} />
+                    )}
+                    {(r.photo || platePhoto(r.page)) && (
+                      <img src={r.photo || platePhoto(r.page)} alt="" />
+                    )}
+                    <div>
+                      <small>
+                        {r.category} · Archive page {r.page}
+                      </small>
+                      <h1>{r.title}</h1>
+                    </div>
+                  </div>
+                  <div className="recipeText">
+                    <div className="curatorBar">
+                      {curator && (
+                        <>
+                          <button onClick={() => launchEditor("title")}>
+                            <Pencil />
+                            Edit recipe
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (
+                                !confirm(
+                                  "Move " + r.title + " to Deleted recipes?",
+                                )
+                              )
+                                return;
+                              try {
+                                await api("manage", {
+                                  action: "delete",
+                                  id: r.id,
+                                });
+                                await refresh();
+                                select("");
+                                nav("Admin");
+                              } catch (e) {
+                                say(String(e));
+                              }
+                            }}
+                          >
+                            <Trash2 />
+                            Delete
+                          </button>
+                        </>
+                      )}
+                      <button onClick={() => focus(!focusView)}>
+                        {focusView ? <Minimize2 /> : <Maximize2 />}
+                        {focusView ? "Exit immersion" : "Enter immersion"}
+                      </button>
+                      <button
+                        aria-label="Close recipe"
+                        onClick={() => select("")}
+                      >
+                        <X />
+                      </button>
+                    </div>
+                    <button className="back" onClick={() => select("")}>
+                      <ArrowLeft />
+                      Recipe index
+                    </button>
+                    <p>
+                      <small>
+                        {r.category} · Archive page {r.page}
+                        {r.amendment ? " · Amendment page " + r.amendment : ""}
+                      </small>
+                    </p>
+                    <p>
+                      {r.revision
+                        ? "Approved revision " + r.revision
+                        : r.active
+                          ? "Review copy · awaiting recipe approval"
+                          : "Historical recipe · archived"}
+                    </p>
+                    {curator && (
+                      <button
+                        className="editAllergens"
+                        onClick={() => launchEditor("allergen")}
+                      >
+                        <Pencil />
+                        Edit allergens
+                      </button>
+                    )}
+                    <RecipeOrigin id={r.id} category={r.category} />
+                    <AllergenPanel key={r.id} recipe={r} />
+                    <div className="batchSteps" aria-label="Scale formula">
+                      <small>Scale formula</small>
+                      {[0.5, 1, 1.5, 2, 3].map((n) => (
+                        <button
+                          key={n}
+                          aria-pressed={Number(target) === r.baseYield * n}
+                          onClick={() => yieldTo(String(r.baseYield * n))}
+                        >
+                          {n}x
+                        </button>
+                      ))}
+                      <button
+                        aria-label="Reduce batch by half a batch"
+                        onClick={() =>
+                          yieldTo(
+                            String(
+                              Math.max(
+                                0.5 * r.baseYield,
+                                Number(target) - 0.5 * r.baseYield,
+                              ),
+                            ),
+                          )
+                        }
+                      >
+                        -
+                      </button>
+                      <button
+                        aria-label="Increase batch by half a batch"
+                        onClick={() =>
+                          yieldTo(String(Number(target) + 0.5 * r.baseYield))
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="controls">
+                      <label>
+                        Target yield
+                        <span className="unitinput">
+                          <input
+                            aria-label={"Target " + r.unit}
+                            type="number"
+                            min="0"
+                            step="any"
+                            value={target}
+                            onChange={(e) => yieldTo(e.target.value)}
+                          />
+                          <span>{r.unit}</span>
+                        </span>
+                      </label>
+                      <button
+                        disabled={!(Number(target) > 0)}
+                        onClick={async () => {
+                          const { recipePdf } = await import("./pdf.js");
+                          recipePdf(r, Number(target)).save(
+                            r.title.replace(/[^a-z0-9 -]/gi, "").trim() +
+                              ".pdf",
+                          );
+                        }}
+                      >
+                        <Download />
+                        Download recipe PDF
+                      </button>
+                    </div>
+                    {msg && <p role="alert">{msg}</p>}
+                    {editing && (
+                      <>
+                        <button onClick={() => edit(false)}>
+                          Close editor
+                        </button>
+                        <Editor
+                          key={editField}
+                          focusField={editField}
+                          r={r}
+                          onSaved={refresh}
+                        />
+                      </>
+                    )}
+                    <h2>Ingredients</h2>
+                    {Number(target) > 0 ? (
+                      <>
+                        <p>
+                          Target {target} {r.unit} · Base recipe {r.baseYield}{" "}
+                          {r.unit}
+                        </p>
+                        <Ingredients recipe={r} target={Number(target)} />
+                      </>
+                    ) : (
+                      <p>Enter a positive target yield.</p>
+                    )}
+                    {r.note && (
+                      <>
+                        <h2>Production notes</h2>
+                        <p className="lines">{r.note}</p>
+                      </>
+                    )}
+                    <h2>Method</h2>
+                    {Number(target) !== r.baseYield && (
+                      <p>
+                        Method quantities below refer to the base batch. Check
+                        additions against the scaled ingredient list.
+                      </p>
+                    )}
+                    <div className="lines">{r.method}</div>
+                    <button
+                      onClick={async () =>
+                        showSource(source ? "" : await api("source?id=" + r.id))
+                      }
+                    >
+                      {source ? "Hide" : "View"} archive original
+                    </button>
+                    {source && <pre>{source}</pre>}
+                  </div>
+                </div>
               </>
             )}
             {tab === "Production" && <Production recipes={data.recipes} />}

@@ -1106,13 +1106,282 @@ main {
     font-size: 22px;
   }
 }
-main.recipePage{max-width:none;margin:0;padding:0;min-height:calc(100dvh - 64px)}
-.recipeSpread{display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);min-height:calc(100dvh - 64px)}
-.recipePortrait{position:sticky;top:64px;height:calc(100dvh - 64px);display:flex;align-items:end;background:#e8dfd0;overflow:hidden}
-.recipePortrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.recipePortrait>div{position:relative;width:100%;padding:clamp(24px,4vw,74px)}.recipePortrait h1{font-size:clamp(45px,5vw,94px);line-height:1.01;margin:.2em 0 0}
-.withPhoto>div{color:white;background:linear-gradient(transparent,rgba(35,25,15,.82));padding-top:90px}.withPhoto small{color:#fff6e9}
-.recipeText{min-width:0;padding:24px clamp(24px,5vw,92px) 64px}.recipeText>p{color:var(--stone)}.recipeText pre{white-space:pre-wrap;overflow-wrap:anywhere}
-.allergenPanel{border:0;border-left:4px solid #45382b;border-radius:0;background:#f2ede6;padding:clamp(17px,2vw,32px);margin:22px 0}.allergenPanel>small{display:flex;align-items:center;gap:10px;color:#49382d}.allergenPanel>small svg{color:#936225}.allergenPanel .variant{font-weight:600;margin:.8rem 0}.allergenRow{margin:12px 0}.allergenRow b{display:block;font-size:13px;margin-bottom:7px}.allergenTags{display:flex;gap:7px;flex-wrap:wrap}.allergenTags span{padding:5px 10px;border:1px solid #8b7b68;color:#3b3026;font-size:14px;font-weight:600}.evidence{color:#665b50;font-size:14px;margin:.6em 0}.declaration+.declaration{border-top:1px solid #cbbfac;margin-top:14px}.recipeText table td:last-child{font-weight:600}
-@media(max-width:700px){.recipeSpread{display:block}.recipePortrait{position:relative;top:0;height:auto;min-height:145px}.recipePortrait.withPhoto{height:clamp(155px,26vh,220px)}.recipePortrait>div{padding:20px}.withPhoto>div{padding-top:50px}.recipePortrait h1{font-size:clamp(35px,8.2vw,49px)}.recipeText{padding:8px 18px 44px}.allergenPanel{margin:14px 0}.recipeText>.back{min-height:40px}}
-@media print{.recipeSpread{display:block}.recipePortrait{position:static;height:auto}.recipePortrait img{display:none}.recipePortrait>div{background:none;color:black;padding:0}.recipeText{padding:0}.allergenPanel{display:block!important}.recipePortrait small{color:black}}
+main.recipePage {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  min-height: calc(100dvh - 64px);
+}
+.recipeSpread {
+  display: grid;
+  grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+  min-height: calc(100dvh - 64px);
+}
+.recipePortrait {
+  position: sticky;
+  top: 64px;
+  height: calc(100dvh - 64px);
+  display: flex;
+  align-items: end;
+  background: #e8dfd0;
+  overflow: hidden;
+}
+.recipePortrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.recipePortrait > div {
+  position: relative;
+  width: 100%;
+  padding: clamp(24px, 4vw, 74px);
+}
+.recipePortrait h1 {
+  font-size: clamp(45px, 5vw, 94px);
+  line-height: 1.01;
+  margin: 0.2em 0 0;
+}
+.withPhoto > div {
+  color: white;
+  background: linear-gradient(transparent, rgba(35, 25, 15, 0.82));
+  padding-top: 90px;
+}
+.withPhoto small {
+  color: #fff6e9;
+}
+.recipeText {
+  min-width: 0;
+  padding: 24px clamp(24px, 5vw, 92px) 64px;
+}
+.recipeText > p {
+  color: var(--stone);
+}
+.recipeText pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.allergenPanel {
+  border: 0;
+  border-left: 4px solid #45382b;
+  border-radius: 0;
+  background: #f2ede6;
+  padding: clamp(17px, 2vw, 32px);
+  margin: 22px 0;
+}
+.allergenPanel > small {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #49382d;
+}
+.allergenPanel > small svg {
+  color: #936225;
+}
+.allergenPanel .variant {
+  font-weight: 600;
+  margin: 0.8rem 0;
+}
+.allergenRow {
+  margin: 12px 0;
+}
+.allergenRow b {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+.allergenTags {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.allergenTags span {
+  padding: 5px 10px;
+  border: 1px solid #8b7b68;
+  color: #3b3026;
+  font-size: 14px;
+  font-weight: 600;
+}
+.evidence {
+  color: #665b50;
+  font-size: 14px;
+  margin: 0.6em 0;
+}
+.declaration + .declaration {
+  border-top: 1px solid #cbbfac;
+  margin-top: 14px;
+}
+.recipeText table td:last-child {
+  font-weight: 600;
+}
+@media (max-width: 700px) {
+  .recipeSpread {
+    display: block;
+  }
+  .recipePortrait {
+    position: relative;
+    top: 0;
+    height: auto;
+    min-height: 145px;
+  }
+  .recipePortrait.withPhoto {
+    height: clamp(155px, 26vh, 220px);
+  }
+  .recipePortrait > div {
+    padding: 20px;
+  }
+  .withPhoto > div {
+    padding-top: 50px;
+  }
+  .recipePortrait h1 {
+    font-size: clamp(35px, 8.2vw, 49px);
+  }
+  .recipeText {
+    padding: 8px 18px 44px;
+  }
+  .allergenPanel {
+    margin: 14px 0;
+  }
+  .recipeText > .back {
+    min-height: 40px;
+  }
+}
+@media print {
+  .recipeSpread {
+    display: block;
+  }
+  .recipePortrait {
+    position: static;
+    height: auto;
+  }
+  .recipePortrait img {
+    display: none;
+  }
+  .recipePortrait > div {
+    background: none;
+    color: black;
+    padding: 0;
+  }
+  .recipeText {
+    padding: 0;
+  }
+  .allergenPanel {
+    display: block !important;
+  }
+  .recipePortrait small {
+    color: black;
+  }
+}
+.adminRows {
+  display: grid;
+  margin: 20px 0;
+}
+.adminRows button {
+  justify-content: space-between;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  padding: 12px;
+  background: none;
+  color: var(--ink);
+}
+.photoTools {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 16px;
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+}
+.photoTools label,
+.photoTools button,
+.photoTools span {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 8px 12px;
+  margin: 0;
+  font-size: 13px;
+}
+.photoTools label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.photoTools input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.curatorBar,
+.batchSteps {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+.curatorBar button {
+  font-size: 13px;
+  background: var(--ink);
+  color: white;
+}
+.batchSteps small {
+  margin-right: 8px;
+}
+.batchSteps button {
+  padding: 4px 10px;
+}
+.batchSteps [aria-pressed="true"] {
+  background: var(--ink);
+  color: white;
+}
+.editAllergens {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+.editAllergens + .allergenPanel {
+  margin-top: 6px;
+}
+.readingMode {
+  display: block;
+}
+.readingMode .recipePortrait {
+  position: relative;
+  height: auto;
+  min-height: 155px;
+  top: 0;
+}
+.readingMode .recipeText {
+  max-width: 980px;
+  margin: auto;
+}
+.readingMode .recipePortrait > div {
+  padding: 25px 32px;
+}
+.readingMode .recipePortrait h1 {
+  font-size: 42px;
+}
+.readingMode .photoTools {
+  position: relative;
+  inset: auto;
+  margin: 10px;
+}
+.recipeText input,
+.recipeText textarea {
+  scroll-margin-top: 80px;
+}
+@media print {
+  .curatorBar,
+  .photoTools,
+  .batchSteps {
+    display: none;
+  }
+}
+.recipeOrigin{display:flex;justify-content:space-between;gap:12px;margin:16px 0;border-bottom:1px solid var(--rule)}.recipeOrigin p{font:italic 25px 'Cormorant Garamond',serif;text-transform:capitalize;margin:4px 0 13px}.photoTools{max-width:calc(100% - 32px)}.photoTools span{max-width:100%}
