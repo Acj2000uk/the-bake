@@ -7,7 +7,8 @@ import { Ingredients } from "./Ingredients";
 import { Production } from "./Production";
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-500.css";
-import { Collection, Engraving } from "./Collection";
+import {AllergenPanel} from "./AllergenPanel";
+import { Collection, Engraving, platePhoto } from "./Collection";
 import {
   LogOut,
   BookOpen,
@@ -163,7 +164,7 @@ function App() {
         </main>
       ) : (
         <>
-          <main>
+          <main className={tab==="Recipes" && r?"recipePage":undefined}>
             <div hidden={tab !== "Recipes" || Boolean(r)}>
               <Collection
                 recipes={data.recipes}
@@ -174,7 +175,9 @@ function App() {
             </div>
             {tab === "Recipes" && r && (
               <>
-                <button className="back" onClick={() => select("")}>
+                <div className="recipeSpread"><div className={"recipePortrait"+(platePhoto(r.page)?" withPhoto":"")}>
+                {platePhoto(r.page)&&<img src={platePhoto(r.page)} alt=""/>}<div><small>{r.category} · Archive page {r.page}</small><h1>{r.title}</h1></div></div>
+                <div className="recipeText"><button className="back" onClick={() => select("")}>
                   <ArrowLeft />
                   Recipe index
                 </button>
@@ -184,7 +187,6 @@ function App() {
                     {r.amendment ? " · Amendment page " + r.amendment : ""}
                   </small>
                 </p>
-                <h1>{r.title}</h1>
                 <p>
                   {r.revision
                     ? "Approved revision " + r.revision
@@ -192,6 +194,7 @@ function App() {
                       ? "Review copy · awaiting recipe approval"
                       : "Historical recipe · archived"}
                 </p>
+                <AllergenPanel key={r.id} recipe={r}/>
                 <div className="controls">
                   <label>
                     Target yield
@@ -252,11 +255,6 @@ function App() {
                   </p>
                 )}
                 <div className="lines">{r.method}</div>
-                <h2>Allergen reference</h2>
-                <div className="lines">
-                  {r.allergen ||
-                    "Archived product. No current product declaration."}
-                </div>
                 <button
                   onClick={async () =>
                     showSource(source ? "" : await api("source?id=" + r.id))
@@ -264,7 +262,7 @@ function App() {
                 >
                   {source ? "Hide" : "View"} archive original
                 </button>
-                {source && <pre>{source}</pre>}
+                {source && <pre>{source}</pre>}</div></div>
               </>
             )}
             {tab === "Production" && <Production recipes={data.recipes} />}

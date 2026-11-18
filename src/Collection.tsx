@@ -35,6 +35,7 @@ export function Engraving() {
   );
 }
 const images = import.meta.glob<string>("./plates/*.webp", { eager:true, import:"default", query:"?url" });
+export function platePhoto(page:number){return images["./plates/"+page+".webp"]}
 export function Collection({
   recipes,
   favs,

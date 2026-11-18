@@ -1106,3 +1106,13 @@ main {
     font-size: 22px;
   }
 }
+main.recipePage{max-width:none;margin:0;padding:0;min-height:calc(100dvh - 64px)}
+.recipeSpread{display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);min-height:calc(100dvh - 64px)}
+.recipePortrait{position:sticky;top:64px;height:calc(100dvh - 64px);display:flex;align-items:end;background:#e8dfd0;overflow:hidden}
+.recipePortrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.recipePortrait>div{position:relative;width:100%;padding:clamp(24px,4vw,74px)}.recipePortrait h1{font-size:clamp(45px,5vw,94px);line-height:1.01;margin:.2em 0 0}
+.withPhoto>div{color:white;background:linear-gradient(transparent,rgba(35,25,15,.82));padding-top:90px}.withPhoto small{color:#fff6e9}
+.recipeText{min-width:0;padding:24px clamp(24px,5vw,92px) 64px}.recipeText>p{color:var(--stone)}.recipeText pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.allergenPanel{border:0;border-left:4px solid #45382b;border-radius:0;background:#f2ede6;padding:clamp(17px,2vw,32px);margin:22px 0}.allergenPanel>small{display:flex;align-items:center;gap:10px;color:#49382d}.allergenPanel>small svg{color:#936225}.allergenPanel .variant{font-weight:600;margin:.8rem 0}.allergenRow{margin:12px 0}.allergenRow b{display:block;font-size:13px;margin-bottom:7px}.allergenTags{display:flex;gap:7px;flex-wrap:wrap}.allergenTags span{padding:5px 10px;border:1px solid #8b7b68;color:#3b3026;font-size:14px;font-weight:600}.evidence{color:#665b50;font-size:14px;margin:.6em 0}.declaration+.declaration{border-top:1px solid #cbbfac;margin-top:14px}.recipeText table td:last-child{font-weight:600}
+@media(max-width:700px){.recipeSpread{display:block}.recipePortrait{position:relative;top:0;height:auto;min-height:145px}.recipePortrait.withPhoto{height:clamp(155px,26vh,220px)}.recipePortrait>div{padding:20px}.withPhoto>div{padding-top:50px}.recipePortrait h1{font-size:clamp(35px,8.2vw,49px)}.recipeText{padding:8px 18px 44px}.allergenPanel{margin:14px 0}.recipeText>.back{min-height:40px}}
+@media print{.recipeSpread{display:block}.recipePortrait{position:static;height:auto}.recipePortrait img{display:none}.recipePortrait>div{background:none;color:black;padding:0}.recipeText{padding:0}.allergenPanel{display:block!important}.recipePortrait small{color:black}}
