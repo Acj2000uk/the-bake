@@ -9,7 +9,6 @@ import "@fontsource/inter/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-500.css";
 import { Collection, Engraving } from "./Collection";
 import {
-  Wheat,
   LogOut,
   BookOpen,
   ClipboardList,
@@ -20,6 +19,8 @@ import {
   KeyRound,
   ChevronRight,
 } from "lucide-react";
+import "@fontsource/cormorant-garamond/latin-500-italic.css";
+import "@fontsource/pinyon-script/latin-400.css";
 import "./style.css";
 function App() {
   const [data, set] = useState<Catalog | null>(null),
@@ -66,8 +67,10 @@ function App() {
     <>
       <header className="topbar">
         <div className="identity">
-          <Wheat />
-          <span>MCN Bake</span>
+          <span className="monogram">
+            M<b>C</b>N
+          </span>
+          <i>Bake</i>
         </div>
         {data && (
           <nav aria-label="Kitchen navigation">

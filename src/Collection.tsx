@@ -1,14 +1,6 @@
+/// <reference types="vite/client" />
 import { useState } from "react";
-import {
-  Search,
-  Bookmark,
-  ChevronRight,
-  BookOpen,
-  Archive,
-  Wheat,
-  X,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Search, Bookmark, Wheat, X } from "lucide-react";
 import type { Recipe } from "./types";
 
 // A wheat engraving for the cover and masthead.
@@ -42,6 +34,7 @@ export function Engraving() {
     </svg>
   );
 }
+const images = import.meta.glob<string>("./plates/*.webp", { eager:true, import:"default", query:"?url" });
 export function Collection({
   recipes,
   favs,
@@ -54,138 +47,149 @@ export function Collection({
   open: (r: Recipe) => void;
 }) {
   const [q, search] = useState(""),
-    [cat, category] = useState("All categories"),
-    [mode, filter] = useState("Current");
-  const modes = [
-    { name: "Current", icon: BookOpen },
-    { name: "Favourites", icon: Bookmark },
-    { name: "Archive", icon: Archive },
+    [cat, category] = useState("The full Bible"),
+    [mode, filter] = useState("All");
+  const chapters = [
+    "The full Bible",
+    "Sourdough",
+    "Pastries",
+    "Cakes",
+    "Cookies",
+    "Breads",
   ];
-  const matches = recipes.filter(
+
+  const pool = recipes.filter(
     (r) =>
-      (mode === "Archive"
-        ? !r.active
-        : mode === "Favourites"
-          ? favs.includes(r.id)
-          : r.active) &&
-      (cat === "All categories" || r.category === cat) &&
+      mode === "All" || (mode === "Current" ? r.active : favs.includes(r.id)),
+  );
+  const matches = pool.filter(
+    (r) =>
+      (cat === chapters[0] || cat === r.category) &&
       (r.title + " " + r.ingredients.map((i) => i.name).join(" "))
         .toLowerCase()
         .includes(q.toLowerCase().trim()),
   );
   return (
-    <>
-      <div className="cover">
-        <div>
-          <small>MCN Hospitality · Kitchen collection</small>
-          <h1>The Bake Bible</h1>
-          <p>
-            {recipes.filter((r) => r.active).length} current recipes{" "}
-            <span>/</span> {new Set(recipes.map((r) => r.category)).size}{" "}
-            categories
-          </p>
+    <div className="archiveShell">
+      <aside className="chapterRail">
+        <small>Chapters index</small>
+        <div className="chapterList">
+          {chapters.map((name, i) => (
+            <button
+              key={name}
+              aria-pressed={cat === name}
+              onClick={() => category(name)}
+            >
+              {name}
+              <span>
+                (
+                {i === 0
+                  ? pool.length
+                  : pool.filter((r) => r.category === name).length}
+                )
+              </span>
+            </button>
+          ))}
         </div>
-        <Engraving />
-      </div>
-      <div className="segments" aria-label="Collection">
-        {modes.map(({ name, icon: Icon }) => (
-          <button
-            key={name}
-            aria-pressed={name === mode}
-            onClick={() => filter(name)}
-          >
-            <Icon />
-            {name}
-          </button>
-        ))}
-      </div>
-      <div className="tools">
-        <label className="search">
+        <small>Library tools</small>
+        <div className="shelfModes">
+          {["All", "Current", "Favourites"].map((name) => (
+            <button
+              key={name}
+              aria-pressed={mode === name}
+              onClick={() => filter(name)}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      </aside>
+      <div className="archiveBody">
+        <small className="kicker">Archives</small>
+        <div className="archiveTitle">
+          <h1>
+            <i>The Bake</i> Bible
+          </h1>
+          <div>
+            <small>Available vol.</small>
+            <em>{matches.length}</em>
+          </div>
+        </div>
+        <label className="archiveSearch">
           <Search />
           <input
-            type="search"
             aria-label="Search recipes"
+            type="search"
             placeholder="Search recipes or ingredients"
             value={q}
             onChange={(e) => search(e.target.value)}
           />
         </label>
-        <label className="category">
-          <SlidersHorizontal />
-          <select
-            aria-label="Category"
-            value={cat}
-            onChange={(e) => category(e.target.value)}
-          >
-            {["All categories", ...new Set(recipes.map((r) => r.category))].map(
-              (c) => (
-                <option key={c}>{c}</option>
-              ),
-            )}
-          </select>
-        </label>
-      </div>
-      <div className="ledger">
-        <div className="ledgerhead">
-          <small>Recipe index</small>
-          <small>
-            {matches.length} {matches.length === 1 ? "recipe" : "recipes"}
-          </small>
+        <div className="plates">
+          {matches.map((r) => {
+            const photo = images["./plates/"+r.page+".webp"];
+            return (
+              <article className="plate" key={r.id}>
+                <button className="plateLink" onClick={() => open(r)}>
+                  <span className="plateImage">
+                    {photo ? (
+                      <img
+                        loading="lazy"
+                        src={photo}
+                        alt=""
+                      />
+                    ) : (
+                      <span className="typePlate">
+                        <small>MCN Bake</small>
+                        <i>{r.title}</i>
+                        <small>{r.category}</small>
+                      </span>
+                    )}
+                    <span className="folio">Archive p. {r.page}</span>
+                  </span>
+                  <span className="plateCaption">
+                    <small>
+                      {r.category} ·{" "}
+                      {r.revision
+                        ? "Approved"
+                        : r.active
+                          ? "In review"
+                          : "Archived"}
+                    </small>
+                    <strong>{r.title}</strong>
+                  </span>
+                </button>
+                <button
+                  className="plateMark"
+                  aria-label={"Favourite " + r.title}
+                  aria-pressed={favs.includes(r.id)}
+                  onClick={() => star(r.id)}
+                >
+                  <Bookmark
+                    fill={favs.includes(r.id) ? "currentColor" : "none"}
+                  />
+                </button>
+              </article>
+            );
+          })}
         </div>
-        {matches.map((r) => (
-          <div className="entry" key={r.id}>
-            <button className="entrylink" onClick={() => open(r)}>
-              <span className="record">
-                <small>{r.category}</small>
-                <strong>{r.title}</strong>
-              </span>
-              <span className="status">
-                {r.revision
-                  ? "Approved"
-                  : !r.active
-                    ? "Archived"
-                    : r.amendment
-                      ? "Amended"
-                      : "In review"}
-              </span>
-              <ChevronRight />
-            </button>
+        {!matches.length && (
+          <div className="blank">
+            <Wheat />
+            <h2>No matching recipes</h2>
             <button
-              className="mark"
-              aria-label={"Favourite " + r.title}
-              aria-pressed={favs.includes(r.id)}
-              onClick={() => star(r.id)}
+              onClick={() => {
+                search("");
+                category(chapters[0]);
+                filter("All");
+              }}
             >
-              <Bookmark fill={favs.includes(r.id) ? "currentColor" : "none"} />
+              <X />
+              Browse the full Bible
             </button>
           </div>
-        ))}
+        )}
       </div>
-      {!matches.length && (
-        <div className="blank">
-          <Wheat />
-          <h2>
-            {mode === "Favourites"
-              ? "No saved recipes here"
-              : "No recipes found"}
-          </h2>
-          <p>
-            {mode === "Favourites"
-              ? "Use the bookmark beside a recipe to save it on this device."
-              : "Try another ingredient or browse the full collection."}
-          </p>
-          <button
-            onClick={() => {
-              search("");
-              category("All categories");
-              filter("Current");
-            }}
-          >
-            <X />
-            Clear filters and browse
-          </button>
-        </div>
-      )}
-    </>
+    </div>
   );
 }

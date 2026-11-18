@@ -789,3 +789,320 @@ th:last-child {
     display: none;
   }
 }
+:root {
+  --ox: #493b2f;
+  --paper: #fcf9f5;
+  --rule: #e5dccf;
+}
+.topbar {
+  height: 64px;
+  background: #fcf9f5;
+  justify-content: flex-end;
+}
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-right: auto;
+  line-height: 1;
+}
+.identity .monogram {
+  display: block !important;
+  font:
+    500 33px/0.93 "Cormorant Garamond",
+    serif;
+  letter-spacing: 0.08em;
+}
+.monogram b {
+  color: #af8644;
+  font-weight: 500;
+}
+.identity i {
+  font:
+    17px/1 "Pinyon Script",
+    cursive;
+  color: #96723e;
+  border-top: 1px solid #d7bf94;
+  width: 100%;
+  text-align: center;
+  margin-top: 2px;
+}
+.topbar .exit {
+  margin: 0;
+}
+.topbar nav button {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+main {
+  max-width: 1530px;
+  padding: clamp(35px, 5vw, 84px) clamp(18px, 4vw, 64px) 70px;
+}
+.archiveShell {
+  display: grid;
+  grid-template-columns: minmax(165px, 21%) minmax(0, 1fr);
+  gap: 5%;
+}
+.chapterRail > small,
+.kicker {
+  display: block;
+  text-transform: uppercase;
+  font:
+    500 11px Inter,
+    sans-serif;
+  letter-spacing: 0.3em;
+  color: #736b62;
+}
+.chapterRail > small {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 20px;
+}
+.chapterList {
+  margin: 22px 0 50px;
+}
+.chapterList button {
+  width: 100%;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: 12px;
+  color: #6b6257;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 10px 0;
+}
+.chapterList button span {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+.chapterList button[aria-pressed="true"] {
+  box-shadow: inset 0 -1px #392d23;
+  color: #29221c;
+}
+.shelfModes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 12px;
+}
+.shelfModes button {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 13px;
+  color: var(--stone);
+  padding: 5px 7px;
+}
+.shelfModes button[aria-pressed="true"] {
+  border-bottom: 1px solid var(--ink);
+  color: var(--ink);
+}
+.kicker:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 48px;
+  height: 1px;
+  background: #aa9e90;
+  margin-right: 17px;
+}
+.archiveTitle {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 24px 0;
+}
+.archiveTitle h1 {
+  font-size: clamp(52px, 6.4vw, 102px);
+  line-height: 0.95;
+  margin: 0;
+}
+.archiveTitle i {
+  font-weight: 500;
+}
+.archiveTitle > div {
+  text-align: right;
+}
+.archiveTitle em {
+  display: block;
+  font:
+    italic 24px "Cormorant Garamond",
+    serif;
+}
+.archiveSearch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--rule);
+  margin: 0 0 25px;
+  color: var(--stone);
+}
+.archiveSearch input {
+  background: none;
+  border: 0;
+  margin: 0 !important;
+}
+.plates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px clamp(16px, 2.5vw, 48px);
+}
+.plate {
+  position: relative;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.plateLink {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  background: none !important;
+  color: var(--ink) !important;
+}
+.plateImage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4/5;
+  background: #eae2d5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.plateImage img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+}
+.typePlate {
+  border: 1px solid #c9b89c;
+  width: 83%;
+  height: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.typePlate i {
+  font:
+    italic 500 clamp(22px, 2.2vw, 38px)/1.08 "Cormorant Garamond",
+    serif;
+}
+.folio {
+  position: absolute;
+  bottom: 9px;
+  right: 9px;
+  background: #fffaf2;
+  padding: 4px 8px;
+  font:
+    500 10px Inter,
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.plateCaption {
+  display: grid;
+  gap: 5px;
+  padding: 13px 38px 0 0;
+}
+.plateCaption strong {
+  font:
+    500 clamp(22px, 2vw, 30px)/1.08 "Cormorant Garamond",
+    serif;
+}
+.plateMark {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: none;
+  border: 0;
+  width: 38px;
+  padding: 0;
+}
+.cover {
+  background: #eee7dc;
+  color: var(--ink);
+}
+.cover small,
+.cover p {
+  color: var(--stone);
+}
+.cover .engraving {
+  color: #b69b6d;
+}
+@media (max-width: 850px) {
+  .archiveShell {
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 25px;
+  }
+  .plates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .archiveShell {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .chapterRail > small {
+    padding-bottom: 9px;
+  }
+  .chapterRail > small:nth-of-type(2) {
+    display: none;
+  }
+  .chapterList {
+    display: flex;
+    overflow-x: auto;
+    gap: 18px;
+    margin: 0;
+  }
+  .chapterList button {
+    width: auto;
+    white-space: nowrap;
+    gap: 6px;
+    font-size: 11px;
+  }
+  .shelfModes {
+    margin: 0;
+  }
+  .archiveTitle {
+    margin: 15px 0;
+  }
+  .archiveTitle h1 {
+    font-size: clamp(42px, 11vw, 62px);
+  }
+  .plates {
+    gap: 24px 12px;
+  }
+  .plateCaption small {
+    font-size: 10px;
+  }
+  .plateCaption strong {
+    font-size: 21px;
+  }
+  .plateCaption {
+    padding-right: 24px;
+  }
+  .plateMark {
+    width: 26px;
+  }
+  .topbar .identity {
+    gap: 0;
+  }
+  .typePlate i {
+    font-size: 22px;
+  }
+}
