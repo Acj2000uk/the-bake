@@ -1,0 +1,291 @@
+:root {
+  color: #33291f;
+  background: #f8f4eb;
+  font-family: Inter, Arial, sans-serif;
+  line-height: 1.55;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+header,
+nav,
+main {
+  padding-inline: max(5vw, calc((100vw - 1150px) / 2));
+}
+header {
+  border-bottom: 1px solid #d6c8b4;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-block: 15px;
+}
+.brand {
+  font:
+    600 1.8rem Georgia,
+    serif;
+}
+.brand i {
+  font-weight: 400;
+}
+header > span:nth-child(2),
+small {
+  font-size: 0.69rem;
+  letter-spacing: 0.13em;
+  font-weight: bold;
+  color: #735d41;
+}
+header button {
+  margin-left: auto;
+}
+nav {
+  display: flex;
+  gap: 0.6rem;
+  padding-block: 8px;
+  border-bottom: 1px solid #dacdb9;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  min-height: 44px;
+  border: 1px solid #bfb09a;
+  border-radius: 5px;
+  padding: 0.45rem 0.85rem;
+  background: #fffdf7;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:hover,
+button[aria-current="page"],
+form button {
+  background: #42382b;
+  color: white;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+main {
+  padding-block: 2.5rem 5rem;
+}
+h1,
+h2,
+h3 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: normal;
+  line-height: 1.12;
+}
+h1 {
+  font-size: clamp(2.65rem, 6vw, 4.8rem);
+  margin: 0.3em 0 0.45em;
+}
+h2 {
+  font-size: 1.9rem;
+}
+label {
+  display: block;
+  margin: 0.5rem 0;
+}
+label > input:not([type="checkbox"]),
+label > select,
+label > textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+input[type="checkbox"] {
+  min-height: auto;
+}
+textarea {
+  min-height: 7rem;
+}
+.row,
+.controls,
+footer {
+  display: flex;
+  align-items: end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.row > label,
+.row > input {
+  flex: 1;
+  min-width: 9rem;
+}
+.controls {
+  align-items: center;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(255px, 100%), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+article,
+section,
+.login form {
+  background: #fffdf7;
+  border: 1px solid #dbcfbc;
+  padding: 1.3rem;
+  border-radius: 6px;
+}
+.grid article {
+  display: flex;
+  flex-direction: column;
+}
+.grid h2 {
+  margin: 0.7rem 0 1.1rem;
+}
+.title {
+  font: inherit;
+  text-align: left;
+  border: 0;
+  padding: 0;
+  background: none;
+}
+.title:hover {
+  color: #76532b;
+  background: none;
+}
+footer {
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  font-size: 0.85rem;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+td,
+th {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.65rem;
+  border-bottom: 1px solid #d8ccba;
+}
+th {
+  background: #ece5d6;
+}
+.lines {
+  white-space: pre-line;
+  max-width: 80ch;
+}
+.login form,
+form {
+  max-width: 38rem;
+}
+pre {
+  overflow: auto;
+  background: #fffdf7;
+  padding: 1rem;
+  max-width: 100%;
+}
+.printonly,
+.grid:not(:empty) + .empty {
+  display: none;
+}
+section {
+  margin-block: 1rem;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #855911;
+  outline-offset: 2px;
+}
+@media (max-width: 550px) {
+  header {
+    gap: 0.6rem;
+  }
+  nav {
+    gap: 0;
+    justify-content: space-between;
+  }
+  nav button {
+    padding: 0.4rem;
+    border: 0;
+  }
+  header > span:nth-child(2) {
+    display: none;
+  }
+  .row > label {
+    min-width: 44%;
+  }
+  td {
+    overflow-wrap: anywhere;
+  }
+  main {
+    padding-block: 1.5rem;
+  }
+}
+@page {
+  size: A4;
+  margin: 16mm;
+}
+@media print {
+  body {
+    background: white;
+    font-size: 10pt;
+  }
+  header,
+  main {
+    padding: 0;
+  }
+  header {
+    margin-bottom: 8mm;
+  }
+  nav,
+  button,
+  .controls,
+  section,
+  label,
+  .row,
+  pre {
+    display: none !important;
+  }
+  .printonly {
+    display: block;
+  }
+  article {
+    border: 0;
+    padding: 0;
+  }
+  h1 {
+    font-size: 26pt;
+  }
+  h2 {
+    font-size: 16pt;
+    break-after: avoid;
+  }
+  tr {
+    break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  .lines {
+    max-width: none;
+  }
+  td,
+  th {
+    padding: 4pt;
+  }
+}
+.brand i {
+  font-family: "Pinyon Script", cursive;
+  font-size: 1.4em;
+}
+h1,
+h2,
+h3 {
+  font-weight: 500;
+}

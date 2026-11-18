@@ -1,0 +1,28 @@
+{
+  "name": "mcn-bake-bible",
+  "version": "2.0.0",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "type": "module",
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/pinyon-script": "^5.3.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.9",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8"
+  },
+  "private": true,
+  "devDependencies": {
+    "prettier": "^3.10.1"
+  }
+}
