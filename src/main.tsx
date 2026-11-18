@@ -7,7 +7,19 @@ import { Ingredients } from "./Ingredients";
 import { Production } from "./Production";
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/cormorant-garamond/latin-500.css";
-import "@fontsource/pinyon-script/latin-400.css";
+import { Collection, Engraving } from "./Collection";
+import {
+  Wheat,
+  LogOut,
+  BookOpen,
+  ClipboardList,
+  ShieldCheck,
+  MessageSquare,
+  ArrowLeft,
+  Download,
+  KeyRound,
+  ChevronRight,
+} from "lucide-react";
 import "./style.css";
 function App() {
   const [data, set] = useState<Catalog | null>(null),
@@ -15,9 +27,6 @@ function App() {
     [msg, say] = useState(""),
     [tab, nav] = useState("Recipes"),
     [id, select] = useState(""),
-    [q, search] = useState(""),
-    [cat, category] = useState("All categories"),
-    [mode, filter] = useState("Current"),
     [favs, favourite] = useState<string[]>(() => {
       try {
         return JSON.parse(localStorage.getItem("bake-stars") || "[]");
@@ -55,164 +64,117 @@ function App() {
   }
   return (
     <>
-      <header>
-        <span className="brand">
-          MCN <i>Bake</i>
-        </span>
-        <span>THE KITCHEN EDITION</span>
+      <header className="topbar">
+        <div className="identity">
+          <Wheat />
+          <span>MCN Bake</span>
+        </div>
+        {data && (
+          <nav aria-label="Kitchen navigation">
+            {(data.role === "review"
+              ? ["Recipes", "Allergens"]
+              : ["Recipes", "Production", "Allergens", "Assistant"]
+            ).map((t) => {
+              const Icon =
+                {
+                  Recipes: BookOpen,
+                  Production: ClipboardList,
+                  Allergens: ShieldCheck,
+                  Assistant: MessageSquare,
+                }[t] || BookOpen;
+              return (
+                <button
+                  key={t}
+                  aria-current={tab === t ? "page" : undefined}
+                  onClick={() => {
+                    nav(t);
+                    select("");
+                    say("");
+                  }}
+                >
+                  <Icon />
+                  {t}
+                </button>
+              );
+            })}
+          </nav>
+        )}
         {data && (
           <button
+            className="exit"
+            aria-label="Sign out"
+            title="Sign out"
             onClick={async () => {
               await api("logout", {});
               location.reload();
             }}
           >
-            Sign out
+            <LogOut />
           </button>
         )}
       </header>
       {!data ? (
         <main className="login">
-          <small>MCN HOSPITALITY</small>
-          <h1>The Bake Bible</h1>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              try {
-                await api("login", { password });
-                await refresh();
-                pw("");
-                say("");
-              } catch (e) {
-                say(String(e));
-              }
-            }}
-          >
-            <label>
-              Kitchen password
-              <input
-                autoComplete="current-password"
-                type="password"
-                value={password}
-                onChange={(e) => pw(e.target.value)}
-                required
-              />
-            </label>
-            <button>Open kitchen</button>
-          </form>
-          <p role="alert">{msg}</p>
+          <div className="cover book">
+            <div>
+              <small>MCN Hospitality</small>
+              <h1>The Bake Bible</h1>
+              <p>Kitchen edition</p>
+            </div>
+            <Engraving />
+          </div>
+          <div className="signin">
+            <small>Kitchen access</small>
+            <h2>Open your recipe book</h2>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  await api("login", { password });
+                  await refresh();
+                  pw("");
+                  say("");
+                } catch (e) {
+                  say(String(e));
+                }
+              }}
+            >
+              <label>
+                Password
+                <input
+                  autoComplete="current-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => pw(e.target.value)}
+                  required
+                />
+              </label>
+              <button className="primary">
+                <KeyRound />
+                Open kitchen
+                <ChevronRight />
+              </button>
+            </form>
+            <p role="alert">{msg}</p>
+          </div>
         </main>
       ) : (
         <>
-          <nav>
-            {["Recipes", "Production", "Allergens", "Assistant"].map((t) => (
-              <button
-                key={t}
-                aria-current={tab === t ? "page" : undefined}
-                onClick={() => {
-                  nav(t);
-                  select("");
-                  say("");
-                }}
-              >
-                {t}
-              </button>
-            ))}
-          </nav>
           <main>
-            {tab === "Recipes" && !r && (
-              <>
-                <small>MCN HOSPITALITY</small>
-                <h1>The Bake Bible</h1>
-                <div className="row">
-                  <label>
-                    Search recipes
-                    <input
-                      type="search"
-                      placeholder="Recipe or ingredient"
-                      value={q}
-                      onChange={(e) => search(e.target.value)}
-                    />
-                  </label>
-                  <label>
-                    Category
-                    <select
-                      value={cat}
-                      onChange={(e) => category(e.target.value)}
-                    >
-                      {[
-                        "All categories",
-                        ...new Set(data.recipes.map((r) => r.category)),
-                      ].map((c) => (
-                        <option key={c}>{c}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    Collection
-                    <select
-                      value={mode}
-                      onChange={(e) => filter(e.target.value)}
-                    >
-                      {["Current", "Favourites", "Archive only"].map((c) => (
-                        <option key={c}>{c}</option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-                <div className="grid">
-                  {data.recipes
-                    .filter(
-                      (r) =>
-                        (mode === "Archive only"
-                          ? !r.active
-                          : mode === "Favourites"
-                            ? favs.includes(r.id)
-                            : r.active) &&
-                        (cat === "All categories" || r.category === cat) &&
-                        (
-                          r.title +
-                          " " +
-                          r.ingredients.map((i) => i.name).join(" ")
-                        )
-                          .toLowerCase()
-                          .includes(q.toLowerCase()),
-                    )
-                    .map((r) => (
-                      <article key={r.id}>
-                        <small>{r.category}</small>
-                        <h2>
-                          <button className="title" onClick={() => open(r)}>
-                            {r.title}
-                          </button>
-                        </h2>
-                        <footer>
-                          <span>
-                            {r.revision
-                              ? "Approved · " + r.revision
-                              : r.amendment
-                                ? "Amended · in review"
-                                : r.active
-                                  ? "In review"
-                                  : "Archive"}
-                          </span>
-                          <button
-                            aria-label={"Favourite " + r.title}
-                            aria-pressed={favs.includes(r.id)}
-                            onClick={() => star(r.id)}
-                          >
-                            {favs.includes(r.id) ? "★" : "☆"}
-                          </button>
-                        </footer>
-                      </article>
-                    ))}
-                </div>
-                <p className="empty">No matching recipes.</p>
-              </>
-            )}
+            <div hidden={tab !== "Recipes" || Boolean(r)}>
+              <Collection
+                recipes={data.recipes}
+                favs={favs}
+                star={star}
+                open={open}
+              />
+            </div>
             {tab === "Recipes" && r && (
               <>
-                <button onClick={() => select("")}>Back to recipes</button>
+                <button className="back" onClick={() => select("")}>
+                  <ArrowLeft />
+                  Recipe index
+                </button>
                 <p>
                   <small>
                     {r.category} · Archive page {r.page}
@@ -229,14 +191,18 @@ function App() {
                 </p>
                 <div className="controls">
                   <label>
-                    Target {r.unit}
-                    <input
-                      type="number"
-                      min="0"
-                      step="any"
-                      value={target}
-                      onChange={(e) => yieldTo(e.target.value)}
-                    />
+                    Target yield
+                    <span className="unitinput">
+                      <input
+                        aria-label={"Target " + r.unit}
+                        type="number"
+                        min="0"
+                        step="any"
+                        value={target}
+                        onChange={(e) => yieldTo(e.target.value)}
+                      />
+                      <span>{r.unit}</span>
+                    </span>
                   </label>
                   <button
                     disabled={!(Number(target) > 0)}
@@ -247,6 +213,7 @@ function App() {
                       );
                     }}
                   >
+                    <Download />
                     Download recipe PDF
                   </button>
                   {data.role === "admin" && (
@@ -315,7 +282,12 @@ function App() {
                     ))}
                   </select>
                 </label>
-                <pre>{data.booklet[page]}</pre>
+                <div className="booklet">
+                  <small>
+                    Staff reference · Page {page + 1} of {data.booklet.length}
+                  </small>
+                  <pre>{data.booklet[page]}</pre>
+                </div>
               </>
             )}
             {tab === "Assistant" && (

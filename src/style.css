@@ -289,3 +289,503 @@ h2,
 h3 {
   font-weight: 500;
 }
+:root {
+  --ink: #332d26;
+  --stone: #6b6156;
+  --rule: #d8d0c1;
+  --paper: #f8f5ee;
+  --ox: #522e32;
+  background: var(--paper);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+h1,
+h2,
+h3,
+.record strong {
+  letter-spacing: -0.025em;
+}
+small {
+  font:
+    600 11px/1.4 Inter,
+    sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+.lucide {
+  width: 19px;
+  height: 19px;
+  stroke-width: 1.65;
+  flex: none;
+}
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 4px;
+}
+.topbar {
+  height: 62px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--paper);
+  padding-block: 0;
+  gap: 32px;
+  border-color: var(--rule);
+}
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  font:
+    500 27px/1 "Cormorant Garamond",
+    serif;
+}
+.identity svg {
+  color: var(--ox);
+  width: 24px;
+  height: 24px;
+}
+.topbar nav {
+  padding: 0;
+  align-self: stretch;
+  gap: 12px;
+  border: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.topbar nav button,
+.segments button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--stone);
+  border-bottom: 2px solid transparent;
+  margin: 0;
+  font-size: 14px;
+}
+.topbar nav button[aria-current="page"],
+.segments button[aria-pressed="true"] {
+  border-color: var(--ox);
+  color: var(--ox);
+  font-weight: 600;
+}
+.topbar .exit {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: var(--stone);
+  min-width: 44px;
+}
+main {
+  max-width: 1240px;
+  margin: auto;
+  padding: 32px clamp(18px, 5vw, 64px) 70px;
+}
+.cover {
+  background: var(--ox);
+  color: #faf1df;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: clamp(28px, 4vw, 54px);
+  min-height: 214px;
+  border-radius: 4px;
+}
+.cover > div {
+  position: relative;
+  z-index: 1;
+}
+.cover small {
+  color: #e3c5ab;
+}
+.cover h1 {
+  font-size: clamp(52px, 7vw, 92px);
+  margin: 0.08em 0 0.12em;
+  font-weight: 500;
+  line-height: 1.02;
+}
+.cover p {
+  margin: 0;
+  color: #e8dbca;
+  font-size: 14px;
+}
+.cover p span {
+  margin: 0 8px;
+  color: #c8ab93;
+}
+.engraving {
+  position: absolute;
+  height: 115%;
+  width: 38%;
+  right: 1%;
+  top: -6%;
+  color: #cfab85;
+  pointer-events: none;
+}
+.segments {
+  display: flex;
+  border-bottom: 1px solid var(--rule);
+  gap: 18px;
+  margin-top: 14px;
+}
+.segments button {
+  padding: 12px 3px 10px;
+  min-height: 49px;
+}
+.tools {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 20px 0;
+}
+.tools label {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  gap: 10px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fffdf9;
+  padding: 0 12px;
+  color: var(--stone);
+}
+.search {
+  flex: 1;
+}
+.tools :is(input, select) {
+  border: none;
+  margin: 0 !important;
+  background: transparent;
+  padding-inline: 0;
+  min-width: 0;
+}
+.tools label:focus-within,
+.unitinput:focus-within {
+  outline: 2px solid #915c47;
+  outline-offset: 2px;
+}
+.tools :is(input, select):focus-visible,
+.unitinput input:focus-visible {
+  outline: none;
+}
+.ledgerhead,
+.entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+}
+.ledgerhead {
+  padding: 10px 14px;
+  background: #eee9df;
+  border-top: 1px solid var(--rule);
+}
+.entrylink {
+  flex: 1;
+  min-width: 0;
+  justify-content: initial;
+  text-align: left;
+  padding: 13px 10px 13px 14px;
+  color: var(--ink);
+}
+.entry button {
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+.entry:focus-within,
+.entry:hover {
+  background: #f0eae0;
+}
+.entry button:hover {
+  color: var(--ox);
+}
+.record {
+  display: grid;
+  gap: 3px;
+}
+.record strong {
+  font:
+    500 clamp(22px, 2vw, 29px)/1.14 "Cormorant Garamond",
+    Georgia,
+    serif;
+}
+.record small {
+  font-size: 11px;
+}
+.status {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--stone);
+  padding-inline: 15px;
+}
+.entrylink > svg {
+  color: #897d6c;
+  transition: transform 0.15s;
+}
+.entrylink:hover > svg {
+  transform: translateX(2px);
+}
+.mark {
+  min-width: 48px;
+  color: var(--stone);
+}
+.mark[aria-pressed="true"] {
+  color: var(--ox);
+}
+.blank,
+.booklet {
+  padding: 26px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fffdf8;
+  margin-block: 18px;
+}
+.blank {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+.blank h2,
+.blank p {
+  margin: 0;
+}
+.blank > svg {
+  color: var(--ox);
+}
+.blank button {
+  margin-top: 8px;
+}
+.login {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: stretch;
+  max-width: 1040px;
+  margin: clamp(18px, 7vh, 85px) auto;
+}
+.book {
+  min-height: 410px;
+  align-items: start;
+  border-radius: 4px 0 0 4px;
+}
+.book .engraving {
+  width: 76%;
+  height: 59%;
+  top: auto;
+  bottom: -3%;
+  right: -3%;
+}
+.book h1 {
+  max-width: 5ch;
+}
+.signin {
+  border: 1px solid var(--rule);
+  border-left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(20px, 4vw, 52px);
+  background: #fffdf8;
+}
+.signin h2 {
+  margin: 0.4em 0;
+  font-size: 36px;
+}
+.login form {
+  border: 0;
+  padding: 0;
+  background: none;
+}
+.signin .primary {
+  margin-top: 10px;
+  width: 100%;
+  background: var(--ox);
+  color: white;
+  border-color: var(--ox);
+}
+.primary svg:last-child {
+  margin-left: auto;
+}
+.controls {
+  border-block: 1px solid var(--rule);
+  padding: 12px 0;
+  gap: 16px;
+}
+.unitinput {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding-right: 12px;
+  gap: 6px;
+  color: var(--stone);
+}
+.unitinput input {
+  width: 95px;
+  border: 0;
+  background: none;
+}
+.back {
+  border: 0;
+  background: none;
+  color: var(--ox);
+  padding-left: 0;
+}
+.lines {
+  line-height: 1.8;
+}
+.booklet pre {
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+th {
+  background: #eee9df;
+  color: var(--stone);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+td,
+th {
+  padding: 13px 15px;
+}
+td:last-child,
+th:last-child {
+  text-align: right;
+}
+[role="status"]:not(:empty),
+[role="alert"]:not(:empty) {
+  padding: 12px 16px;
+  border-left: 3px solid var(--ox);
+  background: #eee7dc;
+}
+@media (max-width: 700px) {
+  .topbar {
+    gap: 12px;
+    padding-inline: 13px;
+  }
+  .topbar nav {
+    gap: 1px;
+  }
+  .topbar nav button {
+    padding-inline: 6px;
+    font-size: 13px;
+  }
+  .topbar nav svg {
+    display: none;
+  }
+  .identity {
+    font-size: 23px;
+    gap: 5px;
+  }
+  .topbar:has(nav button:nth-child(3)) .identity span {
+    display: none;
+  }
+  .topbar .exit {
+    min-width: 40px;
+    padding: 6px;
+  }
+  .tools {
+    gap: 7px;
+  }
+  .tools label {
+    padding-inline: 8px;
+  }
+  .tools select {
+    max-width: 125px;
+  }
+  .tools input,
+  .tools select {
+    font-size: 16px;
+  }
+  .segments {
+    gap: 12px;
+  }
+  .segments button {
+    font-size: 13px;
+  }
+  .engraving {
+    opacity: 0.45;
+    right: -7%;
+    width: 40%;
+  }
+  .cover {
+    min-height: 166px;
+    padding: 22px;
+  }
+  .cover h1 {
+    font-size: 50px;
+  }
+  .cover small {
+    font-size: 10px;
+  }
+  .entrylink {
+    padding-left: 5px;
+  }
+  .status {
+    display: none;
+  }
+  .entrylink > svg {
+    margin-left: auto;
+  }
+  .login {
+    display: block;
+    margin: 0 auto;
+  }
+  .book {
+    min-height: 205px;
+    border-radius: 4px 4px 0 0;
+  }
+  .book h1 {
+    max-width: none;
+  }
+  .book .engraving {
+    width: 36%;
+    height: 83%;
+  }
+  .signin {
+    border-left: 1px solid var(--rule);
+    padding: 25px;
+  }
+  .login .book {
+    align-items: center;
+  }
+  .category > .lucide {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrylink > svg {
+    transition: none;
+  }
+  .entrylink:hover > svg {
+    transform: none;
+  }
+}
+@media print {
+  .topbar {
+    position: static;
+  }
+  .topbar nav,
+  .exit,
+  .blank button {
+    display: none !important;
+  }
+  main {
+    padding: 0;
+  }
+  .controls {
+    display: none;
+  }
+}

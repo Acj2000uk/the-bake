@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "./api";
 import type { Recipe, Sheet } from "./types";
+import { ClipboardList } from "lucide-react";
 import { Ingredients } from "./Ingredients";
 export function Production({ recipes }: { recipes: Recipe[] }) {
   const [date, day] = useState(new Date().toLocaleDateString("en-CA")),
@@ -69,12 +70,13 @@ export function Production({ recipes }: { recipes: Recipe[] }) {
         </label>
       </div>
       <p className="printonly">
-        {date} · {venue}
+        {date.split("-").reverse().join("/")} · {venue}
       </p>
       <div className="controls">
         <label>
           Approved recipe
           <select
+            id="production-recipe"
             value={id}
             onChange={(e) => {
               select(e.target.value);
@@ -138,7 +140,24 @@ export function Production({ recipes }: { recipes: Recipe[] }) {
         </article>
       ))}
       {!sheet?.lines.length && (
-        <p>No production entries for this date and venue.</p>
+        <div className="blank">
+          <ClipboardList />
+          <h2>Your production sheet is empty</h2>
+          <p>
+            {recipes.some((r) => r.revision)
+              ? "Select an approved recipe and enter the yield for this shift."
+              : "Approve a recipe in the recipe index to start planning this shift."}
+          </p>
+          {recipes.some((r) => r.revision) && (
+            <button
+              onClick={() =>
+                document.getElementById("production-recipe")?.focus()
+              }
+            >
+              Choose a recipe
+            </button>
+          )}
+        </div>
       )}
       <button onClick={() => window.print()}>Print daily sheet</button>
       <p role="status">{msg}</p>

@@ -16,6 +16,7 @@
     "@types/react-dom": "^19.3.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.9",
+    "lucide-react": "^1.75.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "typescript": "^5.9.3",
